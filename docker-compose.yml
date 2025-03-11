@@ -1,0 +1,30 @@
+name: "Nginx Server"
+services:
+  web:
+    image: nginx:latest
+    container_name: web-nginx
+    ports:
+      - "8085:80"
+    volumes:
+      - ./src:/var/www/html
+      - ./default.conf:/etc/nginx/conf.d/default.conf
+
+  php-fpm:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - ./src:/var/www/html
+
+  db:
+    image: mysql:8.2
+    container_name: db-nginx
+    restart: always
+    env_file: ".env"
+    ports:
+      - "33006:3306"
+    volumes:
+      - data-db:/var/lib/mysql
+
+volumes:
+  data-db:
